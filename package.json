@@ -1,0 +1,7 @@
+{
+  "name": "battle_city",
+  "packageManager": "yarn@3.2.1",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true
+}
