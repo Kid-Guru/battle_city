@@ -3,5 +3,14 @@
   "packageManager": "yarn@3.2.1",
   "version": "1.0.0",
   "type": "module",
-  "private": true
+  "private": true,
+  "source": "src/index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "devDependencies": {
+    "parcel": "^2.5.0"
+  }
 }
