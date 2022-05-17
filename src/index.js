@@ -4,7 +4,7 @@ import { Game } from "./game";
 import { Sprite } from './sprite';
 
 import levels from "../data/levels";
-import spriteImg from "./assets/spriteImg.png";
+import spriteImg from "./assets/spriteImgUp.png";
 import spriteMap from '../data/sprite-map';
 
 const canvas = document.querySelector("canvas");

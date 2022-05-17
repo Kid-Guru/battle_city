@@ -1,19 +1,21 @@
+import { CELL_SIZE } from '../src/constants';
+
 export default {
-    0: [336, 0, 16, 16], // empty
-    1: [16 * 16, 0, 16, 16], // full wall
-    2: [17 * 16, 0, 16, 16], // right wall
-    3: [18 * 16, 0, 16, 16], // bottom wall
-    4: [19 * 16, 0, 16, 16], // left wall
-    5: [20 * 16, 0, 16, 16], // top wall
-    10: [20 * 16, 1 * 16, 16, 16],
+    0: [22 * CELL_SIZE, 0 * CELL_SIZE, CELL_SIZE, CELL_SIZE], // empty
+    1: [16 * CELL_SIZE, 0 * CELL_SIZE, CELL_SIZE, CELL_SIZE], // full wall
+    2: [17 * CELL_SIZE, 0 * CELL_SIZE, CELL_SIZE, CELL_SIZE], // right wall
+    3: [18 * CELL_SIZE, 0 * CELL_SIZE, CELL_SIZE, CELL_SIZE], // bottom wall
+    4: [19 * CELL_SIZE, 0 * CELL_SIZE, CELL_SIZE, CELL_SIZE], // left wall
+    5: [20 * CELL_SIZE, 0 * CELL_SIZE, CELL_SIZE, CELL_SIZE], // top wall
+    10: [20 * CELL_SIZE, 1 * CELL_SIZE, CELL_SIZE, CELL_SIZE],
 
     // Player1Tank
-    11: [0 * 16, 0, 16, 16], // top
-    12: [1 * 16, 0, 16, 16],
-    13: [6 * 16, 0, 16, 16], // right
-    14: [7 * 16, 0, 16, 16],
-    15: [4 * 16, 0, 16, 16], // bottom
-    16: [5 * 16, 0, 16, 16],
-    17: [2 * 16, 0, 16, 16], // left
-    18: [3 * 16, 0, 16, 16],
+    11: [0 * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE], // top
+    12: [1 * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE],
+    13: [6 * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE], // right
+    14: [7 * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE],
+    15: [4 * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE], // bottom
+    16: [5 * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE],
+    17: [2 * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE], // left
+    18: [3 * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE],
 };

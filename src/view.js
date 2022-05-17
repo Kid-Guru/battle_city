@@ -1,4 +1,4 @@
-const CELL_SIZE = 16;
+import { CELL_SIZE } from './constants';
 
 export class View {
     constructor(canvas, sprite) {
@@ -44,8 +44,8 @@ export class View {
             ...player1Tank.sprite,
             player1Tank.x,
             player1Tank.y,
-            16,
-            16
+            CELL_SIZE,
+            CELL_SIZE
         );
     }
 }

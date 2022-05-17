@@ -1,6 +1,5 @@
+import { CELL_SIZE } from './constants';
 import { Tank } from "./tank";
-
-const CELL_SIZE = 16;
 export class World {
     _level = null;
     player1Tank = new Tank();
