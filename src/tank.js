@@ -1,7 +1,7 @@
 export class Tank {
     direction = 0;
-    x = 0;
-    y = 0;
+    x = 64;
+    y = 192;
     animationFrame = 0; // 0 or 1
     frames = [
         [0 * 16, 0 * 16, 16, 16],

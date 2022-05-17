@@ -5,9 +5,10 @@ import { Sprite } from './sprite';
 
 import levels from "../data/levels";
 import spriteImg from "./assets/spriteImg.png";
+import spriteMap from '../data/sprite-map';
 
 const canvas = document.querySelector("canvas");
-const sprite = new Sprite(spriteImg);
+const sprite = new Sprite(spriteImg, spriteMap);
 
 const game = new Game({
   world: new World(),

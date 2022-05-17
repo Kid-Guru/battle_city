@@ -3,6 +3,7 @@ export class Game {
         this.world = world;
         this.view = view;
         this.levels = levels;
+        this.level = 0
 
         this.activeKeys = new Set();
 
@@ -10,6 +11,9 @@ export class Game {
     }
 
     init() {
+
+        this.world.setLevel(this.levels[this.level])
+
         document.addEventListener("keydown", (event) => {
             event.preventDefault();
 
