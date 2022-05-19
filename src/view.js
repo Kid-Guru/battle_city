@@ -21,19 +21,23 @@ export class View {
         for (let i = 0; i < level.length; i++) {
             for (let j = 0; j < level.length; j++) {
                 const block = level[i][j];
-                const [x, y, width, height] = this.sprite.get(block.sprite);
 
-                this.context.drawImage(
-                    this.sprite.image,
-                    x,
-                    y,
-                    width,
-                    height,
-                    j * CELL_SIZE,
-                    i * CELL_SIZE,
-                    width,
-                    height
-                );
+                if (block) {
+                    const [x, y, width, height] = this.sprite.get(block.sprite);
+
+                    this.context.drawImage(
+                        this.sprite.image,
+                        x, y, width, height,
+                        block.x, block.y, width, height
+                    );
+
+                    if (block.debug) {
+                        this.context.strokeStyle = '#ffffff';
+                        this.context.lineWidth = 1;
+                        this.context.strokeRect(block.x + 1, block.y + 1, block.width - 2, block.height - 2);
+                        block.debug = false;
+                    }
+                }
             }
         }
     }
