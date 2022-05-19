@@ -1,4 +1,4 @@
-import { CELL_SIZE } from './constants';
+import { CELL_SIZE } from "./constants";
 
 export class View {
     constructor(canvas, sprite) {
@@ -20,8 +20,8 @@ export class View {
     renderLevel(level) {
         for (let i = 0; i < level.length; i++) {
             for (let j = 0; j < level.length; j++) {
-                const object = level[i][j];
-                const [x, y, width, height] = this.sprite.get(object.sprite);
+                const block = level[i][j];
+                const [x, y, width, height] = this.sprite.get(block.sprite);
 
                 this.context.drawImage(
                     this.sprite.image,
@@ -39,13 +39,18 @@ export class View {
     }
 
     renderPlayer1Tank(player1Tank) {
+        const [x, y, width, height] = player1Tank.sprite;
+
         this.context.drawImage(
             this.sprite.image,
-            ...player1Tank.sprite,
+            x,
+            y,
+            width,
+            height,
             player1Tank.x,
             player1Tank.y,
-            CELL_SIZE,
-            CELL_SIZE
+            width,
+            height
         );
     }
 }

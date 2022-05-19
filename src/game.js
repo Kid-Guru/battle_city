@@ -3,7 +3,7 @@ export class Game {
         this.world = world;
         this.view = view;
         this.levels = levels;
-        this.level = 0
+        this.level = 0;
 
         this.activeKeys = new Set();
 
@@ -11,12 +11,9 @@ export class Game {
     }
 
     init() {
-
-        this.world.setLevel(this.levels[this.level])
+        this.world.setLevel(this.levels[this.level]);
 
         document.addEventListener("keydown", (event) => {
-            event.preventDefault();
-
             switch (event.code) {
                 case "ArrowUp":
                 case "ArrowRight":
@@ -24,13 +21,12 @@ export class Game {
                 case "ArrowLeft":
                 case "Space":
                 case "Enter":
-                    this.activeKeys.add(event.code)
+                    event.preventDefault();
+                    this.activeKeys.add(event.code);
             }
         });
 
         document.addEventListener("keyup", (event) => {
-            event.preventDefault();
-
             switch (event.code) {
                 case "ArrowUp":
                 case "ArrowRight":
@@ -38,7 +34,8 @@ export class Game {
                 case "ArrowLeft":
                 case "Space":
                 case "Enter":
-                    this.activeKeys.delete(event.code)
+                    event.preventDefault();
+                    this.activeKeys.delete(event.code);
             }
         });
     }

@@ -1,10 +1,12 @@
-import { CELL_SIZE } from './constants';
+import { CELL_SIZE, DIRECTION } from "./constants";
 
 export class Tank {
-    direction = 0;
-    x = 64;
-    y = 192;
-    speed = 2;
+    direction = DIRECTION.UP;
+    x = 3 * CELL_SIZE;
+    y = 12 * CELL_SIZE;
+    speed = 3;
+    width = CELL_SIZE;
+    height = CELL_SIZE;
     animationFrame = 0; // 0 or 1
     frames = [
         [0 * CELL_SIZE, 0 * CELL_SIZE, CELL_SIZE, CELL_SIZE],
@@ -21,21 +23,28 @@ export class Tank {
         return this.frames[this.direction * 2 + this.animationFrame];
     }
 
-    update(activeKeys) {
+    update(world, activeKeys) {
         if (activeKeys.has("ArrowUp")) {
-            this._move(0, "y", -1);
+            this._turn(DIRECTION.UP);
+            world.canMove(this) && this._move("y", -1);
         } else if (activeKeys.has("ArrowDown")) {
-            this._move(2, "y", 1);
+            this._turn(DIRECTION.DOWN);
+            world.canMove(this) && this._move("y", 1);
         } else if (activeKeys.has("ArrowLeft")) {
-            this._move(3, "x", -1);
+            this._turn(DIRECTION.LEFT);
+            world.canMove(this) && this._move("x", -1);
         } else if (activeKeys.has("ArrowRight")) {
-            this._move(1, "x", 1);
+            this._turn(DIRECTION.RIGHT);
+            world.canMove(this) && this._move("x", 1);
         }
     }
 
-    _move(direction, axis, value) {
-        this[axis] += value * this.speed;
+    _turn(direction) {
         this.direction = direction;
+    }
+
+    _move(axis, value) {
+        this[axis] += value * this.speed;
         this.animationFrame ^= 1;
     }
 }
