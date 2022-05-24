@@ -1,25 +1,13 @@
-export default class Wall {
-  constructor({ x, y, width, height, sprite }) {
-      this.x = x;
-      this.y = y;
-      this.width = width;
-      this.height = height;
-      this.sprite = sprite;
-  }
+import GameObject from './game-object.js';
 
-  get top() {
-      return this.y;
-  }
+export default class Wall extends GameObject {
+    constructor({ type, ...rest }) {
+        super(rest);
 
-  get right() {
-      return this.x + this.width;
-  }
+        this.type = type;
+    }
 
-  get bottom() {
-      return this.y + this.height;
-  }
-
-  get left() {
-      return this.x;
-  }
+    get sprite() {
+        return this.sprites[0];
+    }
 }
