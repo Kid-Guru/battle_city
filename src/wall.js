@@ -1,7 +1,7 @@
-import GameObject from './game-object.js';
+import GameObject from "./game-object.js";
 
 export default class Wall extends GameObject {
-    constructor({ type, ...rest }) {
+    constructor({type, ...rest}) {
         super(rest);
 
         this.type = type;

@@ -13,3 +13,6 @@
 .parcel-cache/*
 
 dist/*
+
+.vscode
+.idea

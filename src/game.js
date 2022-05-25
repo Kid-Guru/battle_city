@@ -1,5 +1,5 @@
 export default class Game {
-    constructor({ world, view, stages }) {
+    constructor({world, view, stages}) {
         this.world = world;
         this.view = view;
         this.stages = stages;

@@ -1,8 +1,8 @@
-import GameObject from './game-object.js';
+import GameObject from "./game-object.js";
 
 export default class Base extends GameObject {
-    constructor(args) {
-        super(args);
+    constructor(arguments_) {
+        super(arguments_);
 
         this.destroyed = false;
     }

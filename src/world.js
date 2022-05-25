@@ -43,12 +43,7 @@ export default class World {
     }
 
     isOutOfBounds(object) {
-        return (
-            object.top < this.top ||
-            object.right > this.right ||
-            object.bottom > this.bottom ||
-            object.left < this.left
-        );
+        return object.top < this.top || object.right > this.right || object.bottom > this.bottom || object.left < this.left;
     }
 
     hasCollision(object) {
@@ -63,22 +58,15 @@ export default class World {
         if (collisionObject) {
             collisionObject.debug = true;
 
-            return { object: collisionObject };
+            return {object: collisionObject};
         }
     }
 
     _getCollisionObject(object) {
-        return this.stage.objects.find(
-            (block) => block && this._haveCollision(object, block)
-        );
+        return this.stage.objects.find((block) => block && this._haveCollision(object, block));
     }
 
     _haveCollision(a, b) {
-        return (
-            a.left < b.right &&
-            a.right > b.left &&
-            a.top < b.bottom &&
-            a.bottom > b.top
-        );
+        return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
     }
 }

@@ -1,18 +1,9 @@
-import {
-    Direction,
-    Keys,
-    TILE_SIZE,
-    TANK_TURN_THRESHOLD,
-} from "./constants.js";
-import {
-    getDirectionForKeys,
-    getAxisForDirection,
-    getValueForDirection,
-} from "./utils.js";
+import {Direction, Keys, TILE_SIZE, TANK_TURN_THRESHOLD} from "./constants.js";
+import {getDirectionForKeys, getAxisForDirection, getValueForDirection} from "./utils.js";
 import GameObject from "./game-object.js";
 
 export default class Tank extends GameObject {
-    constructor({ direction, speed, ...rest }) {
+    constructor({direction, speed, ...rest}) {
         super(rest);
 
         this.direction = direction;
@@ -24,12 +15,7 @@ export default class Tank extends GameObject {
     }
 
     update(world, activeKeys) {
-        if (
-            activeKeys.has(Keys.UP) ||
-            activeKeys.has(Keys.RIGHT) ||
-            activeKeys.has(Keys.DOWN) ||
-            activeKeys.has(Keys.LEFT)
-        ) {
+        if (activeKeys.has(Keys.UP) || activeKeys.has(Keys.RIGHT) || activeKeys.has(Keys.DOWN) || activeKeys.has(Keys.LEFT)) {
             const direction = getDirectionForKeys(activeKeys);
 
             this._turn(world, direction);
@@ -37,22 +23,22 @@ export default class Tank extends GameObject {
         }
 
         if (activeKeys.has(Keys.SPACE)) {
-            const bullet = { x: this.x }
+            // const bullet = {x: this.x};
         }
     }
 
     _turn(world, direction) {
-        const prevDirection = this.direction;
+        const previousDirection = this.direction;
         this.direction = direction;
 
         if (direction === Direction.UP || direction === Direction.DOWN) {
-            if (prevDirection === Direction.RIGHT) {
+            if (previousDirection === Direction.RIGHT) {
                 const value = TILE_SIZE - (this.x % TILE_SIZE);
 
                 if (value <= TANK_TURN_THRESHOLD) {
                     this.x += value;
                 }
-            } else if (prevDirection === Direction.LEFT) {
+            } else if (previousDirection === Direction.LEFT) {
                 const value = this.x % TILE_SIZE;
 
                 if (value <= TANK_TURN_THRESHOLD) {
@@ -60,13 +46,13 @@ export default class Tank extends GameObject {
                 }
             }
         } else {
-            if (prevDirection === Direction.UP) {
+            if (previousDirection === Direction.UP) {
                 const value = this.y % TILE_SIZE;
 
                 if (value <= TANK_TURN_THRESHOLD) {
                     this.y -= value;
                 }
-            } else if (prevDirection === Direction.DOWN) {
+            } else if (previousDirection === Direction.DOWN) {
                 const value = TILE_SIZE - (this.y % TILE_SIZE);
 
                 if (value <= TANK_TURN_THRESHOLD) {
