@@ -39,6 +39,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-prettier", "virtual:d8d44938c1cbcfcfad2ae47bcb7cee78d979bce4cf15ac7aff8756c9fa1e9c88be613a09ba071713f4665e86af0af519acdc4566671c37dd08a4392bc75c65e5#npm:4.0.0"],\
             ["eslint-plugin-sonarjs", "virtual:d8d44938c1cbcfcfad2ae47bcb7cee78d979bce4cf15ac7aff8756c9fa1e9c88be613a09ba071713f4665e86af0af519acdc4566671c37dd08a4392bc75c65e5#npm:0.13.0"],\
             ["eslint-plugin-unicorn", "virtual:d8d44938c1cbcfcfad2ae47bcb7cee78d979bce4cf15ac7aff8756c9fa1e9c88be613a09ba071713f4665e86af0af519acdc4566671c37dd08a4392bc75c65e5#npm:42.0.0"],\
+            ["husky", "npm:8.0.1"],\
             ["parcel", "npm:2.5.0"],\
             ["prettier", "npm:2.5.1"]\
           ],\
@@ -1406,6 +1407,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-prettier", "virtual:d8d44938c1cbcfcfad2ae47bcb7cee78d979bce4cf15ac7aff8756c9fa1e9c88be613a09ba071713f4665e86af0af519acdc4566671c37dd08a4392bc75c65e5#npm:4.0.0"],\
             ["eslint-plugin-sonarjs", "virtual:d8d44938c1cbcfcfad2ae47bcb7cee78d979bce4cf15ac7aff8756c9fa1e9c88be613a09ba071713f4665e86af0af519acdc4566671c37dd08a4392bc75c65e5#npm:0.13.0"],\
             ["eslint-plugin-unicorn", "virtual:d8d44938c1cbcfcfad2ae47bcb7cee78d979bce4cf15ac7aff8756c9fa1e9c88be613a09ba071713f4665e86af0af519acdc4566671c37dd08a4392bc75c65e5#npm:42.0.0"],\
+            ["husky", "npm:8.0.1"],\
             ["parcel", "npm:2.5.0"],\
             ["prettier", "npm:2.5.1"]\
           ],\
@@ -2869,6 +2871,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["humanize-ms", "npm:1.2.1"],\
             ["ms", "npm:2.1.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["husky", [\
+        ["npm:8.0.1", {\
+          "packageLocation": "./.yarn/cache/husky-npm-8.0.1-85fede8470-943a73a13d.zip/node_modules/husky/",\
+          "packageDependencies": [\
+            ["husky", "npm:8.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\

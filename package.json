@@ -10,7 +10,8 @@
     "build": "parcel build",
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix",
-    "prettier:fix": "prettier --write ."
+    "prettier:fix": "prettier --write .",
+    "postinstall": "husky install"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "devDependencies": {
@@ -20,6 +21,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-sonarjs": "^0.13.0",
     "eslint-plugin-unicorn": "^42.0.0",
+    "husky": "^8.0.0",
     "parcel": "^2.5.0",
     "prettier": "2.5.1"
   }
