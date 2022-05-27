@@ -38,6 +38,10 @@ export const TANK_HEIGHT = UNIT_SIZE;
 export const TANK_SPEED = 2;
 export const TANK_TURN_THRESHOLD = 8;
 
+export const BULLET_WIDTH = 32;
+export const BULLET_HEIGHT = 32;
+export const BULLET_SPEED = 4;
+
 //[x, y, width, height]
 
 export const BASE_SPRITES = [
@@ -70,4 +74,11 @@ export const STEEL_WALL_SPRITES = [
     [18 * UNIT_SIZE, 4.5 * UNIT_SIZE, TILE_SIZE, TILE_SIZE], // bottom
     [19 * UNIT_SIZE, 4.5 * UNIT_SIZE, TILE_SIZE, TILE_SIZE], // left
     [20 * UNIT_SIZE, 4.5 * UNIT_SIZE, TILE_SIZE, TILE_SIZE], // top
+];
+
+export const BULLET_SPRITES = [
+    [20 * UNIT_SIZE, 6 * UNIT_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE],
+    [16 * UNIT_SIZE, 8 * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE],
+    [17 * UNIT_SIZE, 8 * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE],
+    [18 * UNIT_SIZE, 8 * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE],
 ];

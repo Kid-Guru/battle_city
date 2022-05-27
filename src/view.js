@@ -17,6 +17,8 @@ export default class View {
         for (const object of objects) {
             const {x, y, width, height, sprite, debug} = object;
 
+            if (!sprite) return;
+
             this.context.drawImage(this.sprite.image, ...sprite, x, y, width, height);
 
             if (debug) {

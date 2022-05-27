@@ -6,6 +6,11 @@ export default class GameObject {
         this.height = height;
         this.sprites = sprites;
         this.animationFrame = 0;
+        this.frames = 0;
+    }
+
+    update() {
+        throw new Error("Method update should be implemented in class " + this.constructor.name);
     }
 
     get top() {

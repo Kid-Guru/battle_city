@@ -7,6 +7,8 @@ export default class Wall extends GameObject {
         this.type = type;
     }
 
+    update() {}
+
     get sprite() {
         return this.sprites[0];
     }

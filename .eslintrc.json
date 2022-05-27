@@ -23,6 +23,7 @@
         "prefer-arrow-callback": "off",
         "unicorn/no-array-reduce": "off",
         "unicorn/no-null": "off",
+        "unicorn/no-array-for-each": "off",
         "sonarjs/cognitive-complexity": ["error", 25]
     }
 }

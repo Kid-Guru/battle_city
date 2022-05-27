@@ -1,29 +1,33 @@
-import {Direction, Keys, TILE_SIZE, TANK_TURN_THRESHOLD} from "./constants.js";
+import {Direction, Keys, TILE_SIZE, TANK_TURN_THRESHOLD, BULLET_WIDTH, BULLET_HEIGHT, BULLET_SPRITES, BULLET_SPEED} from "./constants.js";
 import {getDirectionForKeys, getAxisForDirection, getValueForDirection} from "./utils.js";
 import GameObject from "./game-object.js";
-
+import Bullet from "./bullet";
 export default class Tank extends GameObject {
     constructor({direction, speed, ...rest}) {
         super(rest);
 
         this.direction = direction;
         this.speed = speed;
+        this.isFiring = false;
+        this.bullet = null;
+        this.frames = 0;
     }
 
     get sprite() {
         return this.sprites[this.direction * 2 + this.animationFrame];
     }
 
-    update(world, activeKeys) {
+    update(world, activeKeys, frameDelta) {
         if (activeKeys.has(Keys.UP) || activeKeys.has(Keys.RIGHT) || activeKeys.has(Keys.DOWN) || activeKeys.has(Keys.LEFT)) {
             const direction = getDirectionForKeys(activeKeys);
 
             this._turn(world, direction);
             this._move(world, direction);
+            this._animate(frameDelta);
         }
 
         if (activeKeys.has(Keys.SPACE)) {
-            // const bullet = {x: this.x};
+            this._fire(world);
         }
     }
 
@@ -67,7 +71,6 @@ export default class Tank extends GameObject {
         const value = getValueForDirection(direction);
         const delta = value * this.speed;
 
-        this.animationFrame ^= 1;
         this[axis] += delta;
 
         const isOutOfBounds = world.isOutOfBounds(this);
@@ -75,6 +78,32 @@ export default class Tank extends GameObject {
 
         if (isOutOfBounds || hasCollision) {
             this[axis] += -delta;
+        }
+    }
+
+    _fire(world) {
+        if (!this.bullet) {
+            const bullet = new Bullet({
+                x: this.x,
+                y: this.y,
+                width: BULLET_WIDTH,
+                height: BULLET_HEIGHT,
+                direction: this.direction,
+                speed: BULLET_SPEED,
+                sprites: BULLET_SPRITES,
+                tank: this,
+            });
+            this.bullet = bullet;
+            world.bullets.push(bullet);
+        }
+    }
+
+    _animate(frameDelta) {
+        this.frames += frameDelta;
+
+        if (this.frames > 20) {
+            this.animationFrame ^= 1;
+            this.frames = 0;
         }
     }
 }

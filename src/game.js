@@ -7,6 +7,8 @@ export default class Game {
 
         this.activeKeys = new Set();
 
+        this.lastFrame = 0;
+
         this.loop = this.loop.bind(this);
     }
 
@@ -44,9 +46,13 @@ export default class Game {
         requestAnimationFrame(this.loop);
     }
 
-    loop() {
-        this.world.update(this.activeKeys);
+    loop(currentFrame) {
+        const frameDelta = currentFrame - this.lastFrame;
+
+        this.world.update(this.activeKeys, frameDelta);
         this.view.update(this.world);
+
+        this.lastFrame = currentFrame;
 
         requestAnimationFrame(this.loop);
     }

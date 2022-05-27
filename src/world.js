@@ -24,18 +24,39 @@ export default class World {
         });
         this.player2Tank = null;
         this.enemyTanks = [];
+        this.bullets = [];
     }
 
     get width() {
         return constants.WORLD_SIZE;
     }
 
-    get objects() {
-        return [this.base, this.player1Tank, ...this.stage.objects];
+    get height() {
+        return constants.WORLD_SIZE;
     }
 
-    update(activeKeys) {
-        this.player1Tank.update(this, activeKeys);
+    get top() {
+        return 0;
+    }
+
+    get right() {
+        return this.width;
+    }
+
+    get bottom() {
+        return this.height;
+    }
+
+    get left() {
+        return 0;
+    }
+
+    get objects() {
+        return [this.base, this.player1Tank, ...this.enemyTanks, ...this.stage.objects, ...this.bullets];
+    }
+
+    update(activeKeys, frameDelta) {
+        this.objects.forEach((object) => object.update(this, activeKeys, frameDelta));
     }
 
     setStage(data) {
