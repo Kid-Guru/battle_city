@@ -1,13 +1,18 @@
-import GameObject from "./game-object.js";
+import {TILE_SIZE} from "./constants";
+import GameObject from "./game-object";
 
 export default class Wall extends GameObject {
-    constructor({type, ...rest}) {
-        super(rest);
+    constructor(arguments_) {
+        super(arguments_);
 
-        this.type = type;
+        this.width = TILE_SIZE;
+        this.height = TILE_SIZE;
+        this.damage = 0;
     }
 
+    update() {}
+
     get sprite() {
-        return this.sprites[0];
+        return this.sprites[this.damage];
     }
 }
