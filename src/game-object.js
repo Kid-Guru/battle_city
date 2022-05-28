@@ -1,5 +1,5 @@
 export default class GameObject {
-    constructor({x, y, width, height, sprites}) {
+    constructor({x, y, width, height, sprites} = {}) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -9,8 +9,19 @@ export default class GameObject {
         this.frames = 0;
     }
 
+    static Direction = {
+        UP: 0,
+        RIGHT: 1,
+        DOWN: 2,
+        LEFT: 3,
+    };
+
     update() {
         throw new Error("Method update should be implemented in class " + this.constructor.name);
+    }
+
+    hit() {
+        throw new Error("Method hit should be implemented in class " + this.constructor.name);
     }
 
     get top() {

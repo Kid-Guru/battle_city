@@ -4,17 +4,18 @@ export default class View {
     constructor(canvas, sprite) {
         this.canvas = canvas;
         this.context = canvas.getContext("2d");
+        this.context.imageSmoothingEnabled = false;
         this.sprite = sprite;
     }
 
-    update(world) {
+    update(stage) {
         this.clearScreen();
-        this.renderObjects(world.objects);
+        this.renderStage(stage);
         this.renderGrid();
     }
 
-    renderObjects(objects) {
-        for (const object of objects) {
+    renderStage(stage) {
+        for (const object of stage.objects) {
             const {x, y, width, height, sprite, debug} = object;
 
             if (!sprite) return;

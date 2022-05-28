@@ -1,60 +1,89 @@
+import {BULLET_HEIGHT, BULLET_SPRITES, BULLET_WIDTH} from "./constants";
+import Explosion from "./explosion";
 import GameObject from "./game-object";
 import {getAxisForDirection, getValueForDirection} from "./utils";
 
 export default class Bullet extends GameObject {
     constructor({direction, speed, tank, ...properties}) {
         super(properties);
+
+        this.type = "bullet";
+        this.width = BULLET_WIDTH;
+        this.height = BULLET_HEIGHT;
+        this.sprites = BULLET_SPRITES;
         this.direction = direction;
         this.speed = speed;
         this.tank = tank;
-        this.animationFrame = 0;
-        this.frames = 0;
-        this.isExploding = false;
-        this.isDestroyed = false;
+        this.explosion = null;
     }
 
     get sprite() {
-        return this.sprites[this.animationFrame];
+        return this.sprites[this.direction];
     }
 
-    _animate(frameDelta) {
-        this.frames += frameDelta;
-
-        if (!this.isExploding && !this.isDestroyed) {
-            return;
-        }
-
-        if (this.animationFrame === 4) {
-            this.isDestroyed = true;
-        } else if (this.frames > 30) {
-            this.animationFrame += 1;
-            this.frames = 0;
-        }
-    }
-
-    _move(world) {
+    update({world}) {
         const axis = getAxisForDirection(this.direction);
         const value = getValueForDirection(this.direction);
-        const delta = value * this.speed;
 
-        if (this.isDestroyed) {
-            this.tank.bullet = null;
-            world.bullets = world.bullets.filter((b) => b !== this);
-        } else {
-            this[axis] += delta;
+        this._move(axis, value);
 
-            const isOutOfBounds = world.isOutOfBounds(this);
-            const hasCollision = world.hasCollision(this);
+        const isOutOfBounds = world.isOutOfBounds(this);
+        const collision = world.getCollision(this);
 
-            if (isOutOfBounds || hasCollision) {
-                this.speed = 0;
-                this.isExploding = true;
-            }
+        if (isOutOfBounds) {
+            this._destroy(world);
+        } else if (collision && this._collide(collision.objects)) {
+            this._destroy(world);
+            console.log(world.objects);
         }
     }
 
-    update(world, _, frameDelta) {
-        this._move(world);
-        this._animate(frameDelta);
+    _destroy(world) {
+        this.speed = 0;
+
+        if (!this.explosion) {
+            const [x, y] = this._getExplosionStartingPosition();
+
+            this.explosion = new Explosion({
+                x,
+                y,
+            });
+
+            world.objects.add(this.explosion);
+        } else if (this.explosion.exploded) {
+            world.objects.delete(this.explosion);
+            world.objects.delete(this);
+            this.tank.bullet = null;
+            this.explosion = null;
+        }
+    }
+
+    _move(axis, value) {
+        this[axis] += value * this.speed;
+    }
+
+    _collide(objects) {
+        for (const object of objects) {
+            if (object === this.tank || object === this.explosion) continue;
+
+            object.hit(this);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    _getExplosionStartingPosition() {
+        switch (this.direction) {
+            case GameObject.Direction.UP:
+                return [this.left - 10, this.top - 12];
+            case GameObject.Direction.RIGHT:
+                return [this.right - 16, this.top - 12];
+            case GameObject.Direction.DOWN:
+                return [this.left - 10, this.bottom - 16];
+            case GameObject.Direction.LEFT:
+                return [this.left - 16, this.top - 12];
+        }
     }
 }

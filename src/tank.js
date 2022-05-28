@@ -1,48 +1,34 @@
-import {Direction, Keys, TILE_SIZE, TANK_TURN_THRESHOLD, BULLET_WIDTH, BULLET_HEIGHT, BULLET_SPRITES, BULLET_SPEED} from "./constants.js";
-import {getDirectionForKeys, getAxisForDirection, getValueForDirection} from "./utils.js";
+import {TILE_SIZE, TANK_TURN_THRESHOLD, TANK_WIDTH, TANK_HEIGHT, TANK_SPEED} from "./constants.js";
 import GameObject from "./game-object.js";
 import Bullet from "./bullet";
 export default class Tank extends GameObject {
-    constructor({direction, speed, ...rest}) {
-        super(rest);
+    constructor(arguments_) {
+        super(arguments_);
 
-        this.direction = direction;
-        this.speed = speed;
-        this.isFiring = false;
+        this.width = TANK_WIDTH;
+        this.height = TANK_HEIGHT;
+        this.speed = TANK_SPEED;
+        this.bulletSpeed = 4;
         this.bullet = null;
-        this.frames = 0;
     }
 
     get sprite() {
         return this.sprites[this.direction * 2 + this.animationFrame];
     }
 
-    update(world, activeKeys, frameDelta) {
-        if (activeKeys.has(Keys.UP) || activeKeys.has(Keys.RIGHT) || activeKeys.has(Keys.DOWN) || activeKeys.has(Keys.LEFT)) {
-            const direction = getDirectionForKeys(activeKeys);
-
-            this._turn(world, direction);
-            this._move(world, direction);
-            this._animate(frameDelta);
-        }
-
-        if (activeKeys.has(Keys.SPACE)) {
-            this._fire(world);
-        }
-    }
-
-    _turn(world, direction) {
+    _turn(direction) {
         const previousDirection = this.direction;
+
         this.direction = direction;
 
-        if (direction === Direction.UP || direction === Direction.DOWN) {
-            if (previousDirection === Direction.RIGHT) {
+        if (direction === GameObject.Direction.UP || direction === GameObject.Direction.DOWN) {
+            if (previousDirection === GameObject.Direction.RIGHT) {
                 const value = TILE_SIZE - (this.x % TILE_SIZE);
 
                 if (value <= TANK_TURN_THRESHOLD) {
                     this.x += value;
                 }
-            } else if (previousDirection === Direction.LEFT) {
+            } else if (previousDirection === GameObject.Direction.LEFT) {
                 const value = this.x % TILE_SIZE;
 
                 if (value <= TANK_TURN_THRESHOLD) {
@@ -50,13 +36,13 @@ export default class Tank extends GameObject {
                 }
             }
         } else {
-            if (previousDirection === Direction.UP) {
+            if (previousDirection === GameObject.Direction.UP) {
                 const value = this.y % TILE_SIZE;
 
                 if (value <= TANK_TURN_THRESHOLD) {
                     this.y -= value;
                 }
-            } else if (previousDirection === Direction.DOWN) {
+            } else if (previousDirection === GameObject.Direction.DOWN) {
                 const value = TILE_SIZE - (this.y % TILE_SIZE);
 
                 if (value <= TANK_TURN_THRESHOLD) {
@@ -66,35 +52,23 @@ export default class Tank extends GameObject {
         }
     }
 
-    _move(world, direction) {
-        const axis = getAxisForDirection(direction);
-        const value = getValueForDirection(direction);
-        const delta = value * this.speed;
-
-        this[axis] += delta;
-
-        const isOutOfBounds = world.isOutOfBounds(this);
-        const hasCollision = world.hasCollision(this);
-
-        if (isOutOfBounds || hasCollision) {
-            this[axis] += -delta;
-        }
+    _move(axis, value) {
+        this[axis] += value * this.speed;
     }
 
-    _fire(world) {
+    _fire() {
         if (!this.bullet) {
+            const [x, y] = this._getBulletStartingPosition();
+
             const bullet = new Bullet({
-                x: this.x,
-                y: this.y,
-                width: BULLET_WIDTH,
-                height: BULLET_HEIGHT,
-                direction: this.direction,
-                speed: BULLET_SPEED,
-                sprites: BULLET_SPRITES,
+                x,
+                y,
                 tank: this,
+                direction: this.direction,
+                speed: this.bulletSpeed,
             });
+
             this.bullet = bullet;
-            world.bullets.push(bullet);
         }
     }
 
@@ -104,6 +78,19 @@ export default class Tank extends GameObject {
         if (this.frames > 20) {
             this.animationFrame ^= 1;
             this.frames = 0;
+        }
+    }
+
+    _getBulletStartingPosition() {
+        switch (this.direction) {
+            case Tank.Direction.UP:
+                return [this.left + 10, this.top];
+            case Tank.Direction.RIGHT:
+                return [this.right - 8, this.top + 12];
+            case Tank.Direction.DOWN:
+                return [this.left + 10, this.bottom - 8];
+            case Tank.Direction.LEFT:
+                return [this.left, this.top + 12];
         }
     }
 }
