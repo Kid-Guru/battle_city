@@ -21,7 +21,17 @@ export default class Bullet extends GameObject {
         return this.sprites[this.direction];
     }
 
+    get isExploding() {
+        return Boolean(this.explosion);
+    }
+
     update({world}) {
+        if (this.isExploding) {
+            if (this.explosion.isDestroyed) return this._destroy(world);
+
+            return;
+        }
+
         const axis = getAxisForDirection(this.direction);
         const value = getValueForDirection(this.direction);
 
@@ -29,33 +39,17 @@ export default class Bullet extends GameObject {
 
         const isOutOfBounds = world.isOutOfBounds(this);
         const collision = world.getCollision(this);
+        const shouldExplode = collision && this._collide(collision.objects);
 
-        if (isOutOfBounds) {
-            this._destroy(world);
-        } else if (collision && this._collide(collision.objects)) {
-            this._destroy(world);
-            console.log(world.objects);
+        if (isOutOfBounds || shouldExplode) {
+            this._explode(world);
         }
     }
 
     _destroy(world) {
-        this.speed = 0;
-
-        if (!this.explosion) {
-            const [x, y] = this._getExplosionStartingPosition();
-
-            this.explosion = new Explosion({
-                x,
-                y,
-            });
-
-            world.objects.add(this.explosion);
-        } else if (this.explosion.exploded) {
-            world.objects.delete(this.explosion);
-            world.objects.delete(this);
-            this.tank.bullet = null;
-            this.explosion = null;
-        }
+        this.tank.bullet = null;
+        this.explosion = null;
+        world.objects.delete(this);
     }
 
     _move(axis, value) {
@@ -63,15 +57,24 @@ export default class Bullet extends GameObject {
     }
 
     _collide(objects) {
+        let shouldExplode = false;
         for (const object of objects) {
             if (object === this.tank || object === this.explosion) continue;
 
             object.hit(this);
-
-            return true;
+            shouldExplode = true;
         }
 
-        return false;
+        return shouldExplode;
+    }
+
+    _explode(world) {
+        const [x, y] = this._getExplosionStartingPosition();
+
+        this.speed = 0;
+        this.explosion = new Explosion({x, y});
+
+        world.objects.add(this.explosion);
     }
 
     _getExplosionStartingPosition() {
