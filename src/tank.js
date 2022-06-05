@@ -10,6 +10,7 @@ export default class Tank extends GameObject {
         this.speed = TANK_SPEED;
         this.bulletSpeed = 4;
         this.bullet = null;
+        this.isDestroyed = false;
     }
 
     get sprite() {

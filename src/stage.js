@@ -7,7 +7,15 @@ import SteelWall from "./steel-wall";
 
 export default class Stage {
     constructor(data) {
-        this.objects = new Set([new Base(), new PlayerTank(), ...Stage.createTerrain(data.map)]);
+        this.base = new Base();
+        this.playerTank = new PlayerTank();
+        this.enemies = Stage.createEnemies(data.enemies);
+        this.terrain = Stage.createTerrain(data.map);
+        this.enemyTankCount = 0;
+        this.enemyTankTimer = 0;
+        this.enemyTankPositionIndex = 0;
+
+        this.objects = new Set([this.base, this.playerTank, ...this.terrain]);
     }
 
     static TerrainType = {
@@ -83,6 +91,10 @@ export default class Stage {
             world: this,
         };
 
+        if (this._shouldAddEnemyTank(frameDelta)) {
+            this._addEnemyTank();
+        }
+
         this.objects.forEach((object) => object.update(state));
     }
 
@@ -118,5 +130,30 @@ export default class Stage {
 
     _haveCollision(a, b) {
         return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+    }
+
+    _shouldAddEnemyTank(frameDelta) {
+        this.enemyTankTimer += frameDelta;
+
+        return this.enemyTankTimer > 1000 && this.enemyTankCount < 4;
+    }
+
+    _addEnemyTank() {
+        const tank = this.enemies.shift();
+
+        if (tank) {
+            tank.setPosition(this.enemyTankPositionIndex);
+
+            this.enemyTankCount += 1;
+            this.enemyTankTimer = 0;
+            this.enemyTankPositionIndex = (this.enemyTankPositionIndex + 1) % 3;
+
+            this.objects.add(tank);
+        }
+    }
+
+    _removeEnemyTank(enemyTank) {
+        this.objects.delete(enemyTank);
+        this.enemyTankCount -= 1;
     }
 }
