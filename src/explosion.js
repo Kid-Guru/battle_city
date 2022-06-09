@@ -1,37 +1,41 @@
-import {BULLET_EXPLOSION_WIDTH, BULLET_EXPLOSION_HEIGHT, BULLET_EXPLOSION_SPEED, BULLET_EXPLOSION_SPRITES} from "./constants";
 import GameObject from "./game-object";
 
 export default class Explosion extends GameObject {
     constructor(arguments_) {
         super(arguments_);
 
-        this.width = BULLET_EXPLOSION_WIDTH;
-        this.height = BULLET_EXPLOSION_HEIGHT;
-        this.speed = BULLET_EXPLOSION_SPEED;
-        this.sprites = BULLET_EXPLOSION_SPRITES;
-        this.exploded = false;
+        this.type = "explosion";
     }
 
     get sprite() {
         return this.sprites[this.animationFrame];
     }
 
+    get isExploding() {
+        return this.animationFrame < this.sprites.length;
+    }
+
     update({frameDelta}) {
-        if (!this.exploded) {
-            if (this.animationFrame === 3) {
-                this.exploded = true;
-            } else {
-                this._animate(frameDelta);
-            }
+        if (this.isExploding) {
+            this.animate(frameDelta);
+        } else {
+            this.destroy();
         }
     }
 
-    _animate(frameDelta) {
+    animate(frameDelta) {
         this.frames += frameDelta;
 
         if (this.frames > 50) {
-            this.animationFrame = (this.animationFrame + 1) % 4;
+            this.animationFrame = ((this.animationFrame + 1) % this.sprites.length) + 1;
             this.frames = 0;
         }
+    }
+    hit() {
+        return;
+    }
+
+    destroy() {
+        this.emit("destroyed", this);
     }
 }
