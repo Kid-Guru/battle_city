@@ -14,8 +14,9 @@ export default class BrickWall extends Wall {
 
         this.sprites = BRICK_WALL_SPRITES;
         this.state = 0b0000;
-        this.isHitting = false;
+        this.isDestructable = true;
         this.isDestroyed = false;
+        this.lastHitDirection = -1;
     }
 
     get sprite() {
@@ -42,13 +43,13 @@ export default class BrickWall extends Wall {
                 this.state = this.state | 0b1000;
                 break;
             case Direction.RIGHT:
-                this.state = this.state | 0b0100;
+                this.state = this.state | 0b0001;
                 break;
             case Direction.DOWN:
                 this.state = this.state | 0b0010;
                 break;
             case Direction.LEFT:
-                this.state = this.state | 0b0001;
+                this.state = this.state | 0b0100;
                 break;
         }
     }

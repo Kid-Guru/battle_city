@@ -18,4 +18,8 @@ export default class Base extends GameObject {
     get sprite() {
         return this.sprites[Number(this.destroyed)];
     }
+
+    hit() {
+        this.emit("destroyed", this);
+    }
 }

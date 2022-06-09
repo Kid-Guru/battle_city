@@ -1,15 +1,18 @@
 import Base from "./base";
 import BrickWall from "./brick-wall";
-import * as constants from "./constants";
+import EventEmitter from "./event-emitter";
+import {STAGE_SIZE, TerrainType, TILE_SIZE} from "./constants";
 import EnemyTank from "./enemy-tank";
 import PlayerTank from "./player-tank";
 import SteelWall from "./steel-wall";
 
-export default class Stage {
+export default class Stage extends EventEmitter {
     constructor(data) {
+        super();
+
         this.base = new Base();
         this.playerTank = new PlayerTank();
-        this.enemies = Stage.createEnemies(data.enemies);
+        this.enemyTanks = Stage.createEnemies(data.enemies);
         this.terrain = Stage.createTerrain(data.map);
         this.enemyTankCount = 0;
         this.enemyTankTimer = 0;
@@ -17,28 +20,14 @@ export default class Stage {
 
         this.objects = new Set([this.base, this.playerTank, ...this.terrain]);
 
-        this.events = new Map();
-
-        this.on("bullet.hit", (object) => {
-            if (object.type === "enemyTank") {
-                this._removeEnemyTank(object);
-            }
-        });
+        this.init();
     }
-
-    static TerrainType = {
-        BRICK_WALL: 1,
-        STEEL_WALL: 2,
-        TREE: 3,
-        WATER: 4,
-        ICE: 5,
-    };
 
     static createObject(type, arguments_) {
         switch (type) {
-            case Stage.TerrainType.BRICK_WALL:
+            case TerrainType.BRICK_WALL:
                 return new BrickWall(arguments_);
-            case Stage.TerrainType.STEEL_WALL:
+            case TerrainType.STEEL_WALL:
                 return new SteelWall(arguments_);
         }
     }
@@ -52,8 +41,8 @@ export default class Stage {
 
                 if (value) {
                     const object = Stage.createObject(value, {
-                        x: index * constants.TILE_SIZE,
-                        y: index_ * constants.TILE_SIZE,
+                        x: index * TILE_SIZE,
+                        y: index_ * TILE_SIZE,
                     });
 
                     objects.push(object);
@@ -69,11 +58,11 @@ export default class Stage {
     }
 
     get width() {
-        return constants.STAGE_SIZE;
+        return STAGE_SIZE;
     }
 
     get height() {
-        return constants.STAGE_SIZE;
+        return STAGE_SIZE;
     }
 
     get top() {
@@ -92,20 +81,58 @@ export default class Stage {
         return 0;
     }
 
-    on(event, handler) {
-        if (this.events.has(event)) {
-            this.events.get(event).add(handler);
-        } else {
-            this.events.set(event, new Set([handler]));
-        }
-    }
+    init() {
+        this.base.on("destroyed", () => {
+            this.emit("gameOver");
+        });
 
-    off(event, handler) {
-        this.events.get(event)?.delete(handler);
-    }
+        this.playerTank.on("fire", (bullet) => {
+            this.objects.add(bullet);
 
-    emit(event, argument) {
-        this.events.get(event)?.forEach((handler) => handler(argument));
+            bullet.on("explode", (explosion) => {
+                this.objects.add(explosion);
+
+                explosion.on("destroyed", () => {
+                    this.objects.delete(explosion);
+                });
+            });
+
+            bullet.on("destroyed", () => {
+                this.objects.delete(bullet);
+            });
+        });
+
+        this.playerTank.on("destroyed", (tank) => {
+            this.objects.delete(tank);
+        });
+
+        this.enemyTanks.map((enemyTank) => {
+            enemyTank.on("fire", (bullet) => {
+                this.objects.add(bullet);
+
+                bullet.on("explode", (explosion) => {
+                    this.objects.add(explosion);
+
+                    explosion.on("destroyed", () => {
+                        this.objects.delete(explosion);
+                    });
+                });
+
+                bullet.on("destroyed", () => {
+                    this.objects.delete(bullet);
+                });
+            });
+
+            enemyTank.on("explode", (explosion) => {
+                this.objects.add(explosion);
+
+                explosion.on("destroyed", () => {
+                    this.objects.delete(explosion);
+                });
+            });
+
+            enemyTank.on("destroyed", () => this.removeEnemyTank(enemyTank));
+        });
     }
 
     update(input, frameDelta) {
@@ -115,8 +142,8 @@ export default class Stage {
             world: this,
         };
 
-        if (this._shouldAddEnemyTank(frameDelta)) {
-            this._addEnemyTank();
+        if (this.shouldAddEnemyTank(frameDelta)) {
+            this.addEnemyTank();
         }
 
         this.objects.forEach((object) => object.update(state));
@@ -133,18 +160,18 @@ export default class Stage {
     }
 
     getCollision(object) {
-        const collisionObjects = this._getCollisionObjects(object);
+        const collisionObjects = this.getCollisionObjects(object);
 
         if (collisionObjects.size > 0) {
             return {objects: collisionObjects};
         }
     }
 
-    _getCollisionObjects(object) {
+    getCollisionObjects(object) {
         const objects = new Set();
 
         for (const other of this.objects) {
-            if (other !== object && this._haveCollision(object, other)) {
+            if (other !== object && this.haveCollision(object, other)) {
                 objects.add(other);
             }
         }
@@ -152,18 +179,20 @@ export default class Stage {
         return objects;
     }
 
-    _haveCollision(a, b) {
+    haveCollision(a, b) {
         return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
     }
 
-    _shouldAddEnemyTank(frameDelta) {
+    removeWall() {}
+
+    shouldAddEnemyTank(frameDelta) {
         this.enemyTankTimer += frameDelta;
 
         return this.enemyTankTimer > 1000 && this.enemyTankCount < 4;
     }
 
-    _addEnemyTank() {
-        const tank = this.enemies.shift();
+    addEnemyTank() {
+        const tank = this.enemyTanks.shift();
 
         if (tank) {
             tank.setPosition(this.enemyTankPositionIndex);
@@ -176,7 +205,7 @@ export default class Stage {
         }
     }
 
-    _removeEnemyTank(enemyTank) {
+    removeEnemyTank(enemyTank) {
         this.objects.delete(enemyTank);
         this.enemyTankCount -= 1;
     }
