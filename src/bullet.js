@@ -58,7 +58,7 @@ export default class Bullet extends GameObject {
             if (!this.shouldCollide(object)) continue;
 
             object.hit(this);
-            this.shouldExplode(object);
+            shouldExplode = this.shouldExplode(object);
         }
 
         return shouldExplode;
