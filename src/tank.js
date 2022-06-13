@@ -1,6 +1,6 @@
-import {TILE_SIZE, TANK_TURN_THRESHOLD, TANK_WIDTH, TANK_HEIGHT, TANK_SPEED, Direction} from "./constants.js";
-import GameObject from "./game-object.js";
 import Bullet from "./bullet";
+import {Direction, TANK_HEIGHT, TANK_SPEED, TANK_TURN_THRESHOLD, TANK_WIDTH, TILE_SIZE} from "./constants.js";
+import GameObject from "./game-object.js";
 import TankExplosion from "./tank-explosion.js";
 export default class Tank extends GameObject {
     constructor(arguments_) {
@@ -28,31 +28,37 @@ export default class Tank extends GameObject {
         this.direction = direction;
 
         if (direction === Direction.UP || direction === Direction.DOWN) {
-            if (previousDirection === Direction.RIGHT) {
-                const value = TILE_SIZE - (this.x % TILE_SIZE);
+            const deltaRight = this.x % TILE_SIZE;
+            const deltaLeft = TILE_SIZE - deltaRight;
 
-                if (value <= TANK_TURN_THRESHOLD) {
-                    this.x += value;
+            if (previousDirection === Direction.RIGHT) {
+                if (deltaRight >= TANK_TURN_THRESHOLD) {
+                    this.x += deltaLeft;
+                } else {
+                    this.x -= deltaRight;
                 }
             } else if (previousDirection === Direction.LEFT) {
-                const value = this.x % TILE_SIZE;
-
-                if (value <= TANK_TURN_THRESHOLD) {
-                    this.x -= value;
+                if (deltaLeft >= TANK_TURN_THRESHOLD) {
+                    this.x -= deltaRight;
+                } else {
+                    this.x += deltaLeft;
                 }
             }
         } else {
-            if (previousDirection === Direction.UP) {
-                const value = this.y % TILE_SIZE;
+            const deltaBottom = this.y % TILE_SIZE;
+            const deltaTop = TILE_SIZE - deltaBottom;
 
-                if (value <= TANK_TURN_THRESHOLD) {
-                    this.y -= value;
+            if (previousDirection === Direction.UP) {
+                if (deltaTop >= TANK_TURN_THRESHOLD) {
+                    this.y -= deltaBottom;
+                } else {
+                    this.y += deltaTop;
                 }
             } else if (previousDirection === Direction.DOWN) {
-                const value = TILE_SIZE - (this.y % TILE_SIZE);
-
-                if (value <= TANK_TURN_THRESHOLD) {
-                    this.y += value;
+                if (deltaBottom >= TANK_TURN_THRESHOLD) {
+                    this.y += deltaTop;
+                } else {
+                    this.y -= deltaBottom;
                 }
             }
         }
@@ -126,15 +132,6 @@ export default class Tank extends GameObject {
     }
 
     getExplosionStartingPosition() {
-        switch (this.direction) {
-            case Direction.UP:
-                return [this.left + 10, this.top];
-            case Direction.RIGHT:
-                return [this.right - 8, this.top + 12];
-            case Direction.DOWN:
-                return [this.left + 10, this.bottom - 8];
-            case Direction.LEFT:
-                return [this.left, this.top + 12];
-        }
+        return [this.left + this.width * 0.5, this.top + this.height * 0.5];
     }
 }

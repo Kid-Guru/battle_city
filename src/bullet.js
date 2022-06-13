@@ -1,7 +1,6 @@
 import {BULLET_HEIGHT, BULLET_SPRITES, BULLET_WIDTH, Direction} from "./constants";
 import BulletExplosion from "./bullet-explosion";
 import GameObject from "./game-object";
-import {getAxisForDirection, getValueForDirection} from "./utils";
 
 export default class Bullet extends GameObject {
     constructor({direction, speed, tank, ...properties}) {
@@ -36,8 +35,8 @@ export default class Bullet extends GameObject {
     update({world}) {
         if (this.isExploding) return;
 
-        const axis = getAxisForDirection(this.direction);
-        const value = getValueForDirection(this.direction);
+        const axis = GameObject.getAxisForDirection(this.direction);
+        const value = GameObject.getValueForDirection(this.direction);
 
         this.move(axis, value);
 
@@ -55,10 +54,10 @@ export default class Bullet extends GameObject {
         let shouldExplode = false;
 
         for (const object of objects) {
-            if (object === this.tank || object === this.explosion) continue;
+            if (!this.shouldCollide(object)) continue;
 
             object.hit(this);
-            shouldExplode = true;
+            shouldExplode = this.shouldExplode(object);
         }
 
         return shouldExplode;
@@ -66,7 +65,21 @@ export default class Bullet extends GameObject {
 
     hit() {
         this.stop();
-        this.explode();
+        this.destroy();
+    }
+
+    shouldCollide(object) {
+        return (
+            object.type === "wall" ||
+            (object.type === "playerTank" && this.isFromEnemyTank) ||
+            (object.type === "enemyTank" && this.isFromPlayerTank) ||
+            (object.type === "bullet" && this.isFromEnemyTank && object.isFromPlayerTank) ||
+            (object.type === "bullet" && this.isFromPlayerTank && object.isFromEnemyTank)
+        );
+    }
+
+    shouldExplode(object) {
+        return object.type !== "bullet";
     }
 
     explode() {

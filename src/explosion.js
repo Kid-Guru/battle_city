@@ -26,7 +26,7 @@ export default class Explosion extends GameObject {
     animate(frameDelta) {
         this.frames += frameDelta;
 
-        if (this.frames > 50) {
+        if (this.frames > this.animationSpeed) {
             this.animationFrame = ((this.animationFrame + 1) % this.sprites.length) + 1;
             this.frames = 0;
         }

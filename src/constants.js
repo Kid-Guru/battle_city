@@ -3,7 +3,7 @@ export const TILE_SIZE = 16;
 export const UNIT_SIZE = 32;
 export const STAGE_SIZE = NUMBER_OF_UNITS * UNIT_SIZE;
 
-export const Keys = {
+export const Key = {
     UP: "ArrowUp",
     RIGHT: "ArrowRight",
     DOWN: "ArrowDown",
@@ -70,7 +70,7 @@ export const BULLET_SPRITES = [
 
 export const BULLET_EXPLOSION_WIDTH = UNIT_SIZE;
 export const BULLET_EXPLOSION_HEIGHT = UNIT_SIZE;
-export const BULLET_EXPLOSION_SPEED = 4;
+export const BULLET_EXPLOSION_ANIMATION_SPEED = 50;
 export const BULLET_EXPLOSION_SPRITES = [
     [16 * UNIT_SIZE, 2 * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE],
     [17 * UNIT_SIZE, 2 * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE],
@@ -112,18 +112,17 @@ export const PLAYER1_TANK_SPRITES = [
 export const TANK_WIDTH = UNIT_SIZE;
 export const TANK_HEIGHT = UNIT_SIZE;
 export const TANK_SPEED = 2;
-export const TANK_TURN_THRESHOLD = 8;
+export const TANK_TURN_THRESHOLD = TILE_SIZE * 0.5;
 export const TANK_ANIMATION_FRAME = 20;
 
-export const TANK_EXPLOSION_WIDTH = UNIT_SIZE * 2;
-export const TANK_EXPLOSION_HEIGHT = UNIT_SIZE * 2;
-export const TANK_EXPLOSION_SPEED = 4;
+export const TANK_EXPLOSION_ANIMATION_SPEED = 100;
 export const TANK_EXPLOSION_SPRITES = [
     [16 * UNIT_SIZE, 2 * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE],
     [17 * UNIT_SIZE, 2 * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE],
     [18 * UNIT_SIZE, 2 * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE],
     [19 * UNIT_SIZE, 2 * UNIT_SIZE, UNIT_SIZE * 2, UNIT_SIZE * 2],
     [21 * UNIT_SIZE, 2 * UNIT_SIZE, UNIT_SIZE * 2, UNIT_SIZE * 2],
+    [16 * UNIT_SIZE, 2 * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE],
 ];
 
 export const STEEL_WALL_SPRITES = [
