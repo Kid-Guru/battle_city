@@ -1,14 +1,5 @@
 import Bullet from "./bullet";
-import {
-    Direction,
-    TANK_EXPLOSION_HEIGHT,
-    TANK_EXPLOSION_WIDTH,
-    TANK_HEIGHT,
-    TANK_SPEED,
-    TANK_TURN_THRESHOLD,
-    TANK_WIDTH,
-    TILE_SIZE,
-} from "./constants.js";
+import {Direction, TANK_HEIGHT, TANK_SPEED, TANK_TURN_THRESHOLD, TANK_WIDTH, TILE_SIZE} from "./constants.js";
 import GameObject from "./game-object.js";
 import TankExplosion from "./tank-explosion.js";
 export default class Tank extends GameObject {
@@ -135,6 +126,6 @@ export default class Tank extends GameObject {
     }
 
     getExplosionStartingPosition() {
-        return [this.left - TANK_EXPLOSION_WIDTH * 0.25, this.top - TANK_EXPLOSION_HEIGHT * 0.25];
+        return [this.left + this.width * 0.5, this.top + this.height * 0.5];
     }
 }
