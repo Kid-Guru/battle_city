@@ -55,10 +55,10 @@ export default class Bullet extends GameObject {
         let shouldExplode = false;
 
         for (const object of objects) {
-            if (object === this.tank || object === this.explosion) continue;
+            if (!this.shouldCollide(object)) continue;
 
             object.hit(this);
-            shouldExplode = true;
+            this.shouldExplode(object);
         }
 
         return shouldExplode;
@@ -66,7 +66,21 @@ export default class Bullet extends GameObject {
 
     hit() {
         this.stop();
-        this.explode();
+        this.destroy();
+    }
+
+    shouldCollide(object) {
+        return (
+            object.type === "wall" ||
+            (object.type === "playerTank" && this.isFromEnemyTank) ||
+            (object.type === "enemyTank" && this.isFromPlayerTank) ||
+            (object.type === "bullet" && this.isFromEnemyTank && object.isFromPlayerTank) ||
+            (object.type === "bullet" && this.isFromPlayerTank && object.isFromEnemyTank)
+        );
+    }
+
+    shouldExplode(object) {
+        return object.type !== "bullet";
     }
 
     explode() {
